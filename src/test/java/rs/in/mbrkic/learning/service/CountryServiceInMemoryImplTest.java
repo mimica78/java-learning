@@ -87,7 +87,10 @@ public class CountryServiceInMemoryImplTest {
 		//proveriti da li postoji zemlja
 		// Country selectOneByName(String countryName)
 		Country country = new Country(1, "Srbija"); 
+		countryService.clearAll();
 		Country result = countryService.add(country);
+		List<Country> countries = countryService.selectAll();
+		Assert.assertEquals(countries.size(), 1);		
 		
 		Country mima1 = countryService.selectOneByName("Srbija");
 		
@@ -97,12 +100,71 @@ public class CountryServiceInMemoryImplTest {
 		//ako postoji obrisati
 		if (mima1 != null) {
 			countryService.delete(mima1.getId());
+			List<Country> countries0 = countryService.selectAll();
+			Assert.assertEquals(countries.size(), 0);
 			log.info(mima1.getName() + " is deleted");
-		}
-		else{
+		} else{
 			log.info("Country "+ mima1.getName() + "does not exist");	
 		}
 	}
+	
+	/**
+	 * test kada mozemo da obrisemo
+	 */
+	public void deleteCountryMima1() {
+		Country country1 = new Country(1,"Srbija");
+		Country country2 = new Country(2,"Hrvatska");
+		Country country3 = new Country(3,"Bosna");
+		countryService.add(country1);
+		countryService.add(country2);
+		countryService.add(country3);
+		
+		for (Country item: countryService.selectAll()) {
+			log.info(item);
+		}
+		List<Country> countries = countryService.selectAll();
+		Assert.assertEquals(countries.size(), 3);
+		
+		log.info("---------");
+		
+		countryService.delete(2);
+		
+		for (Country country: countryService.selectAll()) {
+			log.info(country);
+		}
+		List<Country> countriesAfterDelete = countryService.selectAll();
+		Assert.assertEquals(countriesAfterDelete.size(), 2);
+	}
+	
+	/**
+	 * test kada ne mozemo da obrisemo
+	 */
+	public void deleteCountryMima2() {
+		Country country1 = new Country(1,"Srbija");
+		Country country2 = new Country(2,"Hrvatska");
+		Country country3 = new Country(3,"Bosna");
+		countryService.add(country1);
+		countryService.add(country2);
+		countryService.add(country3);
+		
+		for (Country country: countryService.selectAll()) {
+			log.info(country);
+		}
+		List<Country> countries = countryService.selectAll();
+		Assert.assertEquals(countries.size(), 3);
+
+		
+		log.info("---------");
+		
+		countryService.delete(10);
+		
+		for (Country country: countryService.selectAll()) {
+			log.info(country);
+		}
+		List<Country> countriesAfterDelete = countryService.selectAll();
+		Assert.assertEquals(countriesAfterDelete.size(), 3);
+	}
+
 
 //	public Country deleteCountryNotOkTest(){
 //		//countries.remove(countryId);
@@ -170,11 +232,66 @@ public class CountryServiceInMemoryImplTest {
 		log.info("List of countries is empty");
 	}
 	
+	/**
+	 * ovo je popravljena Mimina metoda
+	 */
+	// @Test(enabled = false)
+	public void testUpdateMima2() {
+		countryService.clearAll();
+		Country country1 = new Country(1,"Srbija");
+		Country country2 = new Country(2,"Hrvatska");
+		Country country3 = new Country(3,"Bosna");
+		countryService.add(country1);
+		countryService.add(country2);
+		countryService.add(country3);
+		
+		for (Country item: countryService.selectAll()) {
+			log.info(item);
+		}
+
+		Country countryToUpdate = new Country(2, "Luxemburg");
+		log.info(" ----- ");
+		Country newlyUpdatedCountry = countryService.update(countryToUpdate);
+		log.info(newlyUpdatedCountry);
+		log.info(" ##### ");
+		
+		for (Country item: countryService.selectAll()) {
+			log.info(item);
+		}
+	}
+	
+	// @Test(enabled = false)
+	public void testUpdateMima3() {
+		countryService.clearAll();
+		Country country1 = new Country(1,"Srbija");
+		Country country2 = new Country(2,"Hrvatska");
+		Country country3 = new Country(3,"Bosna");
+		countryService.add(country3);
+		countryService.add(country1);
+		countryService.add(country2);
+		
+		for (Country item: countryService.selectAll()) {
+			log.info(item);
+		}
+
+		Country countryToUpdate = new Country(2, "Luxemburg");
+		log.info(" ----- ");
+		Country newlyUpdatedCountry = countryService.update(countryToUpdate);
+		log.info(" ##### ");
+		
+		for (Country item: countryService.selectAll()) {
+			log.info(item);
+		}
+	}
+	
+	
 
 	//proveriti
-	//testAdd nije dobar
-//	updateCountryTest - ne valja metoda
+	//testAdd nije dobar - Ok
+//	updateCountryTest - ne valja metoda Ok
 //	deleteCountryOkTest
 //	deleteCountryNotOkTest
 //  selectAllTest kako da ispisem listu
+	
+//deleteCountryMima2 kako da proverim da su ostale srbija i bosna	
 }

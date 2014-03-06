@@ -58,11 +58,32 @@ public class CountryServiceInMemoryImpl implements CountryService {
 	
 
 	public void delete(Integer countryId) {
-		countries.remove(countryId);		
-	}
+		// countries.remove(countryId);
 
+		Country countryToDelete = null;
+		
+		for (Country item: countries) {
+			if (item.getId().equals(countryId)) {
+				countryToDelete = item;
+				break;
+			}
+		}
+		
+		if (countryToDelete != null) {
+			countries.remove(countryToDelete);
+		}
+	}
+	
 	public Country update(Country itemToUpdate) {
-		countries.set(itemToUpdate.getId(), itemToUpdate);
+//		countries.set(itemToUpdate.getId() - 1, itemToUpdate);
+//		return itemToUpdate;
+		
+		for (Country item: countries) {
+			if (item.getId().equals(itemToUpdate.getId())) {
+				item.setName(itemToUpdate.getName());
+			}
+		}
+		
 		return itemToUpdate;
 	}
 
